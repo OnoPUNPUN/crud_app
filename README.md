@@ -162,7 +162,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Your Name**
 - GitHub: [@OnoPUNPUN](https://github.com/OnoPUNPUN)
 - LinkedIn: [crud_app](https://github.com/OnoPUNPUN/crud_app.git)
-- Email: your.email@example.com
+- Email: tonmoywasimul04@gmail.com
 
 ## 🙏 Acknowledgments
 
