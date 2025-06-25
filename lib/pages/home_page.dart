@@ -1,4 +1,7 @@
+import 'package:crud_app/Controllers/ProductController.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/product_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,6 +11,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ProductController productController = ProductController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  void loadProducts() async {
+    await productController.fetchProducts();
+    setState(() {});
+  }
+
   void productDialogue() {
     TextEditingController productNameController = TextEditingController();
     TextEditingController productQtyController = TextEditingController();
@@ -144,33 +160,45 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.shopping_bag,
-                size: 100,
-                color: Colors.orange.shade200,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "No products yet!",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.orange,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                "Tap the + button to add your first product.",
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-            ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 25),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1,
           ),
+          itemCount: productController.products.length,
+          itemBuilder: (context, index) {
+            var product = productController.products[index];
+            return ProductCard(
+              onEdit: productDialogue,
+              onDelete: () {
+                productController.deleteProducts(product.sId.toString()).then((
+                  value,
+                ) async {
+                  if (value) {
+                    await productController.fetchProducts();
+                    setState(() async {});
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Product Deleted'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Something Went Wrong'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                });
+              },
+              productData: product,
+            );
+          },
         ),
       ),
     );
