@@ -92,12 +92,12 @@ The app integrates with REST API endpoints for:
 
 ```json
 {
-  "id": "string",
-  "productName": "string",
-  "quantity": "number",
-  "imageUrl": "string",
-  "unitPrice": "number",
-  "totalPrice": "number"
+   "ProductName": "ef",
+   "ProductCode": 256,
+   "Img": "dwq",
+   "Qty": 45,
+   "UnitPrice": 14,
+   "TotalPrice": 888
 }
 ```
 
