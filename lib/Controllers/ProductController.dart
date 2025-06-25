@@ -18,6 +18,57 @@ class ProductController {
     }
   }
 
+  Future<bool> createUpdateProducts(
+    String productName,
+    String img,
+    int qty,
+    int unitPrice,
+    int totalPrice,
+    String? productId,
+    bool isUpdate,
+  ) async {
+    final response = await http.post(
+      Uri.parse(
+        isUpdate ? Urls.updateProductUrl(productId!) : Urls.createProductUrl,
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "ProductName": productName,
+        "ProductCode": DateTime.now().microsecondsSinceEpoch,
+        "Img": img,
+        "Qty": qty,
+        "UnitPrice": unitPrice,
+        "TotalPrice": totalPrice,
+      }),
+    );
+    return response.statusCode == 201 || response.statusCode == 200;
+  }
+
+  Future<void> createProducts(
+    String productName,
+    String img,
+    int qty,
+    int unitPrice,
+    int totalPrice,
+  ) async {
+    final response = await http.post(
+      Uri.parse(Urls.createProductUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "ProductName": productName,
+        "ProductCode": DateTime.now().microsecondsSinceEpoch,
+        "Img": img,
+        "Qty": qty,
+        "UnitPrice": unitPrice,
+        "TotalPrice": totalPrice,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      fetchProducts();
+    }
+  }
+
   Future<bool> deleteProducts(String productId) async {
     final response = await http.get(
       Uri.parse(Urls.deleteProductUrl(productId)),
@@ -26,7 +77,7 @@ class ProductController {
     if (response.statusCode == 200) {
       fetchProducts();
       return true;
-    } else{
+    } else {
       return false;
     }
   }
